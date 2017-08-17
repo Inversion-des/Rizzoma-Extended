@@ -6,7 +6,7 @@
 // @description		Розширення додає поле для пошуку по сторінці на сервісі rizzoma.com
 // @author				Yura Babak
 // @namespace		Rizzoma
-// @version        	0.8.1
+// @version        	0.8.2
 // @include			https://rizzoma.com/*
 // @run-at				document-body
 // @updateURL	    https://github.com/Inversion-des/Rizzoma-Extended/raw/master/extended.meta.js
