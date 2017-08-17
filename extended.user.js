@@ -295,7 +295,7 @@
 			search.results = search.cont.find('.RExt_search_cont__results')
 			search.results.count = search.results.find('.RExt_search_cont__results__count')
 			
-			// hot keys
+			// -hot keys (-hotkeys)
 			$win.on('keydown.RExt', function(e) {
 				switch (e.which) {
 					case $.key.Esc: 
@@ -303,6 +303,7 @@
 						break
 					case $.key.Slash:
 					case $.key.Slash_cyr:
+						if ($(doc.activeElement).is('input')) return true
 						e.preventDefault()
 						search.input.focus()
 						break
