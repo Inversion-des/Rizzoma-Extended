@@ -4,6 +4,7 @@
 // ==UserScript==
 // @name				Rizzoma Extended
 // @description		Розширення додає поле для пошуку по сторінці на сервісі rizzoma.com
+// @author				Yura Babak
 // @namespace		Rizzoma
 // @version        	0.8
 // @include			https://rizzoma.com/*
