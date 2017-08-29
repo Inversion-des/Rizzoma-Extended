@@ -200,8 +200,6 @@
 		delete node[0]._fv_ori_text
 	}
 	tree.clear_hl = function(o) {
-		if (!tree.nodes_with_hl.length) return;
-		
 		$.each(tree.nodes_with_hl, function(i, node) {
 			tree.clear_node_hl(node)
 		})
