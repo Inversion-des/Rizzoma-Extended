@@ -81,7 +81,7 @@
 	// tree.fold_all({in:cont})
 	tree.fold_all = function(o) {
 		o = o || {}
-		var cont = o.in || $('.root-blip')
+		var cont = o.in || $('.root-thread')
 		
 		// if folding all, not in container — clear unfolded markers
 		if (!o.in) {
