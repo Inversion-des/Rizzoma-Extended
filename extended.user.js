@@ -200,6 +200,8 @@
 		delete node[0]._fv_ori_text
 	}
 	tree.clear_hl = function(o) {
+		if (!tree.nodes_with_hl.length) return;
+		
 		$.each(tree.nodes_with_hl, function(i, node) {
 			tree.clear_node_hl(node)
 		})
@@ -295,6 +297,7 @@
 				var val = search.input.val()
 				search.last_search_text = false
 				
+				tree.clear_hl()
 				search.x.hide()
 				search.search_btn.toggle(!!val)
 				
@@ -307,9 +310,6 @@
 					t_delayed_search = setTimeout(function() {
 						search.do_search()
 					}, 500)
-				}
-				else {
-					tree.clear_hl()
 				}
 			})
 			search.input.clear_val = function() {
