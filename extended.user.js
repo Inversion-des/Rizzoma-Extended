@@ -66,6 +66,9 @@
 			block.text = text_parts.join("\n").toLocaleLowerCase()
 			block_by_id_H[block.id] = block
 		})
+		
+		// detect big document
+		tree.f_doc_is_big = Object.keys(block_by_id_H).length > 1000
 	}
 	setTimeout(index_blocks, 500)
 	
