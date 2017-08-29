@@ -268,27 +268,53 @@
 				</div>\
 			').hide().insertBefore(header.find('.js-settings-container')).delay(1000).fadeIn('slow')
 			
-			// input
+			// do search
+			search.last_search_text = null
+			search.do_search = function() {
+				var val = search.input.clear_val()
+				
+				// (<!) ignore same text
+				if (val == search.last_search_text) return;
+				search.last_search_text = val
+				
+				search.search_btn.hide()
+				tree.search_text({text:val})
+				search.cont.addClass('_showing_results')
+				search.x.show()
+				
+				// results
+				search.results.count.text(tree.nodes_with_hl.length)
+				search.results.stop().fadeIn()
+			}
+			
+			//-- input
 			search.input = search.cont.find('input')
+			// on type
 			var t_delayed_search = null
 			search.input.on('input', function() {
 				var val = search.input.val()
-				search.x.toggle(!!val)
+				search.last_search_text = false
+				
+				search.x.hide()
+				search.search_btn.toggle(!!val)
+				
+				// (<!) do not auto-search for big docs
+				if (tree.f_doc_is_big) return;
+				
+				var val = search.input.clear_val()
 				clearTimeout(t_delayed_search)
-				val = $.trim(val)
 				if (val.length>3) {
 					t_delayed_search = setTimeout(function() {
-						// do search
-						tree.search_text({text:val})
-						search.cont.addClass('_showing_results')
-						search.results.count.text(tree.nodes_with_hl.length)
-						search.results.stop().fadeIn()
+						search.do_search()
 					}, 500)
 				}
 				else {
 					tree.clear_hl()
 				}
 			})
+			search.input.clear_val = function() {
+				return $.trim(this.val())
+			}
 			
 			// Search btn (Enter)
 			search.search_btn = search.cont.find('.RExt_search_cont__search_btn')
