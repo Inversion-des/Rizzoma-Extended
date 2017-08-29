@@ -273,7 +273,7 @@
 				search.x.toggle(!!val)
 				clearTimeout(t_delayed_search)
 				val = $.trim(val)
-				if (val.length>1) {
+				if (val.length>3) {
 					t_delayed_search = setTimeout(function() {
 						// do search
 						tree.search_text({text:val})
