@@ -212,7 +212,7 @@
 		})
 		tree.blips_with_matched = []
 		
-		$('.root-blip .RExt_blip_shaded').removeClass('RExt_blip_shaded')
+		$('.root-thread .RExt_blip_shaded').removeClass('RExt_blip_shaded')
 		
 		$win.trigger('tree.clear_hl')
 	}
