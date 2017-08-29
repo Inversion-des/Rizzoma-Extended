@@ -429,5 +429,11 @@
 		return output;
 	};
 	
+	$.fn.getScrollTopMax = function() {
+		var el = this[0]
+		return el.scrollTopMax  ||  el.scrollHeight - el.clientHeight
+	}
+	
+	
 
 }(typeof unsafeWindow == 'undefined' ? window : unsafeWindow)
