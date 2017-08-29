@@ -235,7 +235,11 @@
 		.RExt_search_cont__search_btn {display:none;position:absolute;top:1px;right:1px;background-color:#EFEBAB;padding:10px;cursor:pointer;font-size:12px;line-height:15px;border-radius: 0 5px 5px 0;border-left:1px solid #e6dbae;}\
 			.RExt_search_cont__search_btn:hover {background-color:#F5EE8B;}\
 		.RExt_text_hl {font-weight:normal;background-color:#FFFF00;outline:10px solid transparent;outline-offset:10px;}\
+			.RExt_text_hl._hl_first {border-top:2px solid transparent;}\
+			.RExt_text_hl._hl_last {border-bottom:2px solid transparent;}\
 			.RExt_text_hl._hl_focused {outline: 5px solid rgba(255, 224, 102, 0.6);outline-offset:0px;transition: all 0.3s ease;}\
+			.RExt_text_hl._hl_focused._hl_first {border-top:2px solid #F27316;}\
+			.RExt_text_hl._hl_focused._hl_last {border-bottom:2px solid #F27316;}\
 		.RExt_search_cont._showing_results input {background-color:#FFFFC7;}\
 		.RExt_search_cont__results {display:none;position:absolute;left:-56px;width:50px;text-align:right;top:7px;color:#FFF;}\
 			.RExt_search_cont__results div {display:inline;}\
@@ -299,6 +303,11 @@
 					b.c_top = b.c_top || b.offset().top
 					return a.c_top - b.c_top
 				})
+				// mark first and last
+				if (tree.nodes_with_hl[0]) {
+					tree.nodes_with_hl[0].hl_el.addClass('_hl_first')
+					tree.nodes_with_hl[tree.nodes_with_hl.length-1].hl_el.addClass('_hl_last')
+				}
 				
 				// go to the first result
 				search.cur_result_index = 0
