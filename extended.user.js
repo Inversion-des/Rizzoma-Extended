@@ -223,7 +223,7 @@
 	// -styles
 	$('<style>\
 		.RExt_search_cont {display: inline-block; position: absolute; top: 5px; right: 50px;}\
-		.RExt_search_cont input {width:330px;background-color:#F6F6F6;padding:10px;padding-right:32px; border-radius: 5px; border: 1px solid #859099;}\
+		.RExt_search_cont input {width:300px;background-color:#F6F6F6;padding:10px;padding-right:60px; border-radius: 5px; border: 1px solid #859099;}\
 			.RExt_search_cont input:focus {background-color:#FFF;}\
 				.RExt_search_cont input:focus::placeholder {opacity:0.2}\
 					.RExt_search_cont input:focus::-moz-placeholder {opacity:0.2}\
@@ -231,6 +231,8 @@
 					.RExt_search_cont input:focus:-ms-input-placeholder {opacity:0.2}\
 		.RExt_search_cont__x {display:none;position:absolute;top:0;right:0;padding:10px;cursor:pointer;font-size: 24px;line-height: 19px;}\
 			.RExt_search_cont__x:hover {color:#BD2929;}\
+		.RExt_search_cont__search_btn {display:none;position:absolute;top:1px;right:1px;background-color:#EFEBAB;padding:10px;cursor:pointer;font-size:12px;line-height:15px;border-radius: 0 5px 5px 0;border-left:1px solid #e6dbae;}\
+			.RExt_search_cont__search_btn:hover {background-color:#F5EE8B;}\
 		.RExt_text_hl {font-weight:normal;background-color:#FFFF00;}\
 		.RExt_search_cont._showing_results input {background-color:#FFFFC7;}\
 		.RExt_search_cont__results {display:none;position:absolute;left:-36px;width:30px;text-align:right;top:7px;color:#FFF;}\
@@ -261,6 +263,7 @@
 						<div class="RExt_search_cont__results__count"></div>\
 					</div>\
 					<input type="text" value="" placeholder="Пошук по сторінці" title="Hotkey: /" />\
+					<div class="RExt_search_cont__search_btn" title="Hotkey: Enter">Пошук</div>\
 					<div class="RExt_search_cont__x" title="Hotkey: Esc">×</div>\
 				</div>\
 			').hide().insertBefore(header.find('.js-settings-container')).delay(1000).fadeIn('slow')
@@ -287,6 +290,12 @@
 				}
 			})
 			
+			// Search btn (Enter)
+			search.search_btn = search.cont.find('.RExt_search_cont__search_btn')
+			search.search_btn.on('mousedown', function() {
+				search.do_search()
+			})
+			
 			// X — clear search
 			search.x = search.cont.find('.RExt_search_cont__x')
 			search.x.on('click', function() {
@@ -301,7 +310,10 @@
 			// -hot keys (-hotkeys)
 			$win.on('keydown.RExt', function(e) {
 				switch (e.which) {
-					case $.key.Esc: 
+					case $.key.Enter:
+						search.do_search()
+						break
+					case $.key.Esc:
 						search.x.click()
 						break
 					case $.key.Slash:
@@ -353,6 +365,7 @@
 	}
 
 	$.key = {
+		Enter: 13,
 		Esc: 27,
 		Slash: 191,
 		Slash_cyr: 190,
