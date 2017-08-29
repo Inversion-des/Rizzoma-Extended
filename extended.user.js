@@ -187,7 +187,8 @@
 						node.html(node_text_with_hl)
 						
 						// this data for text nodes used in api
-						node.find('b')[0].data = text
+						node.hl_el = node.find('b')
+						node.hl_el[0].data = text
 						
 						tree.nodes_with_hl.push(node)
 					})
@@ -233,9 +234,11 @@
 			.RExt_search_cont__x:hover {color:#BD2929;}\
 		.RExt_search_cont__search_btn {display:none;position:absolute;top:1px;right:1px;background-color:#EFEBAB;padding:10px;cursor:pointer;font-size:12px;line-height:15px;border-radius: 0 5px 5px 0;border-left:1px solid #e6dbae;}\
 			.RExt_search_cont__search_btn:hover {background-color:#F5EE8B;}\
-		.RExt_text_hl {font-weight:normal;background-color:#FFFF00;}\
+		.RExt_text_hl {font-weight:normal;background-color:#FFFF00;outline:10px solid transparent;outline-offset:10px;}\
+			.RExt_text_hl._hl_focused {outline: 5px solid rgba(255, 224, 102, 0.6);outline-offset:0px;transition: all 0.3s ease;}\
 		.RExt_search_cont._showing_results input {background-color:#FFFFC7;}\
-		.RExt_search_cont__results {display:none;position:absolute;left:-36px;width:30px;text-align:right;top:7px;color:#FFF;}\
+		.RExt_search_cont__results {display:none;position:absolute;left:-56px;width:50px;text-align:right;top:7px;color:#FFF;}\
+			.RExt_search_cont__results div {display:inline;}\
 		.RExt_blip_shaded {padding:0px;height:15px;opacity:0.4;min-height:0px;overflow:hidden;cursor:pointer;}\
 		.RExt_blip_shaded * {cursor:pointer;}\
 	</style>').appendTo('head')
@@ -255,11 +258,14 @@
 		// on header ready
 		$win.on('RExt_head_ready', function() {
 
+			var scroll_cont = $('.js-wave-blips')
+			
 			// search
 			var search = {}
 			search.cont = $('\
 				<div class="RExt_search_cont">\
 					<div class="RExt_search_cont__results">\
+						<div class="RExt_search_cont__results__cur_index"></div>\
 						<div class="RExt_search_cont__results__count"></div>\
 					</div>\
 					<input type="text" value="" placeholder="Пошук по сторінці" title="Hotkey: /" />\
@@ -284,7 +290,51 @@
 				
 				// results
 				search.results.count.text(tree.nodes_with_hl.length)
+				search.results.cur_index.text('')
 				search.results.stop().fadeIn()
+				
+				// sort nodes by y position on the page
+				tree.nodes_with_hl.sort(function(a, b) {
+					a.c_top = a.c_top || a.offset().top
+					b.c_top = b.c_top || b.offset().top
+					return a.c_top - b.c_top
+				})
+				
+				// go to the first result
+				search.cur_result_index = 0
+				search.go_to_cur_result()
+			}
+			
+			// go to
+			search.cur_result_index = 0
+			search.last_focused_hl = $()
+			search.go_to_cur_result = function() {
+				if (!tree.nodes_with_hl.length) return;
+				
+				// index correction
+				if (search.cur_result_index < 0) search.cur_result_index = 0
+				if (search.cur_result_index > tree.nodes_with_hl.length-1) search.cur_result_index = tree.nodes_with_hl.length-1
+				
+				// show index in results (only not 1)
+				search.results.cur_index.text( (search.cur_result_index || search.results.cur_index.text()) ? search.cur_result_index+1+' /' : '')
+				
+				var hl_node = tree.nodes_with_hl[search.cur_result_index]
+				var pos_top = hl_node.offset().top
+				var delta_y = pos_top - (scroll_cont.height()/2) + 50
+				
+				var action = function() {
+					search.last_focused_hl.removeClass('_hl_focused')
+					hl_node.hl_el.addClass('_hl_focused')
+					search.last_focused_hl = hl_node.hl_el
+				}
+				
+				var f_at_the_edge = delta_y <0 && scroll_cont.scrollTop() == 0 || delta_y >0 && scroll_cont.scrollTop() == scroll_cont.getScrollTopMax()
+				if (f_at_the_edge) {
+					action()
+				}
+				else {
+					scroll_cont.stop(true, true).animate({scrollTop: '+='+delta_y}, Math.abs(delta_y), action)
+				}
 			}
 			
 			//-- input
@@ -329,6 +379,7 @@
 			
 			// results
 			search.results = search.cont.find('.RExt_search_cont__results')
+			search.results.cur_index = search.results.find('.RExt_search_cont__results__cur_index')
 			search.results.count = search.results.find('.RExt_search_cont__results__count')
 			
 			// -hot keys (-hotkeys)
@@ -345,6 +396,14 @@
 						if ($(doc.activeElement).is('input')) return true
 						e.preventDefault()
 						search.input.focus()
+						break
+					case $.key.Down:
+					case $.key.Up:
+						// only in search.input
+						if ($(e.target).is(search.input[0])) {
+							search.cur_result_index += ( e.which == $.key.Down ? 1 : -1 )
+							search.go_to_cur_result()
+						}
 						break
 				}
 			})
