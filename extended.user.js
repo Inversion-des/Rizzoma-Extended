@@ -6,7 +6,7 @@
 // @description		Розширення додає поле для пошуку по сторінці на сервісі rizzoma.com
 // @author				Yura Babak
 // @namespace		Rizzoma
-// @version        	0.9.0
+// @version        	0.9.1
 // @include			https://rizzoma.com/*
 // @run-at				document-body
 // @updateURL	    https://github.com/Inversion-des/Rizzoma-Extended/raw/master/extended.meta.js
@@ -424,15 +424,36 @@
 				blip.removeClass('RExt_blip_shaded')
 				return false
 			})
-			// on edit blip — clear any hl in nodes
+			
+			//-- on edit blip — clear any hl in nodes (-edit, -clear)
 			var cur_blip = $()
+			// change cur_blip on click inside every blip
 			$('.js-wave-content').on('mousedown', '.blip-container', function(e) {
+				// *e will bubble up, but cur_blip will be changed only on target blip
 				if (!e._f_blip_saved) cur_blip = $(this)
 				e._f_blip_saved = true
 			})
+			// returns all hl nodes inside some node
+			var find_hl_nodes = function(in_node) {
+				var res = $()
+				in_node.children().each(function() {
+					var node = $(this)
+					if (node.is('.RExt_text_hl')) {
+						res = res.add(node)
+					}
+					// *we should skip all the nested blips here, otherwise when you edit some root blip — all the highlighted search results in nested blips will be removed
+					else if (node.is(':not(.blip-thread)')) {
+						// recursively search in child node
+						res = res.add( find_hl_nodes(node) )
+					}
+				})
+				return res
+			}
+			// detect if blip in edit mode — clear all hl inside it
 			setInterval(function() {
-				if (cur_blip.is('.edit-mode')) {
-					cur_blip.find('.RExt_text_hl').each(function() {
+				// *for root-blip condition is different
+				if (cur_blip.is('.edit-mode') || cur_blip.is('.root-blip') && cur_blip.find('> .js-editor-container > .js-editor').prop('contenteditable') == 'true') {
+					find_hl_nodes(cur_blip).each(function() {
 						var node = $(this).parent()
 						tree.clear_node_hl(node)
 						tree.nodes_with_hl.pull(node)
