@@ -284,7 +284,7 @@
 				var val = search.input.clear_val()
 				
 				// (<!) ignore same text
-				if (val == search.last_search_text) return;
+				if (!val || val == search.last_search_text) return;
 				search.last_search_text = val
 				
 				search.search_btn.hide()
@@ -373,6 +373,23 @@
 				return $.trim(this.val())
 			}
 			
+			// input action keys
+			search.input.on('keydown', function(e) {
+				switch (e.which) {
+					case $.key.Enter:
+						search.do_search()
+						break
+					case $.key.Esc:
+						search.x.click()
+						break
+					case $.key.Down:
+					case $.key.Up:
+						search.cur_result_index += ( e.which == $.key.Down ? 1 : -1 )
+						search.go_to_cur_result()
+						break
+				}
+			})
+			
 			// Search btn (Enter)
 			search.search_btn = search.cont.find('.RExt_search_cont__search_btn')
 			search.search_btn.on('mousedown', function() {
@@ -394,25 +411,11 @@
 			// -hot keys (-hotkeys)
 			$win.on('keydown.RExt', function(e) {
 				switch (e.which) {
-					case $.key.Enter:
-						search.do_search()
-						break
-					case $.key.Esc:
-						search.x.click()
-						break
 					case $.key.Slash:
 					case $.key.Slash_cyr:
 						if ($(doc.activeElement).is('input')) return true
 						e.preventDefault()
 						search.input.focus()
-						break
-					case $.key.Down:
-					case $.key.Up:
-						// only in search.input
-						if ($(e.target).is(search.input[0])) {
-							search.cur_result_index += ( e.which == $.key.Down ? 1 : -1 )
-							search.go_to_cur_result()
-						}
 						break
 				}
 			})
