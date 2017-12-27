@@ -159,7 +159,7 @@
 		
 		// for each block
 		$.each(block_by_id_H, function(id, block) {
-			if (block.text.indexOf(text)>-1) {
+			if (block.text && block.text.indexOf(text)>-1) {
 				res = tree.unfold_all_to_target({id:block.id})
 				
 				// process all the blips in container
