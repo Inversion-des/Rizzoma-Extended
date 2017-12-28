@@ -232,7 +232,7 @@
 					.RExt_search_cont input:focus:-ms-input-placeholder {opacity:0.2}\
 		.RExt_search_cont__x {display:none;position:absolute;top:0;right:0;padding:10px;cursor:pointer;font-size: 24px;line-height: 19px;}\
 			.RExt_search_cont__x:hover {color:#BD2929;}\
-		.RExt_search_cont__search_btn {display:none;position:absolute;top:1px;right:1px;background-color:#EFEBAB;padding:10px;cursor:pointer;font-size:12px;line-height:15px;border-radius: 0 5px 5px 0;border-left:1px solid #e6dbae;}\
+		.RExt_search_cont__search_btn {display:none;position:absolute;top:1px;right:1px;background-color:#EFEBAB;padding:10px;cursor:pointer;font-size:12px;line-height:14px;border-radius: 0 5px 5px 0;border-left:1px solid #e6dbae;}\
 			.RExt_search_cont__search_btn:hover {background-color:#F5EE8B;}\
 		.RExt_text_hl {font-weight:normal;background-color:#FFFF00;outline:10px solid transparent;outline-offset:10px;}\
 			.RExt_text_hl._hl_first {border-top:2px solid transparent;}\
