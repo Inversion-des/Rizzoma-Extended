@@ -59,8 +59,10 @@
 					var id = part.params.__ID
 					block.children_ids.push(id)
 					var child_block = block_by_id_H[id]
-					child_block.thread_id = part.params.__THREAD_ID
-					child_block.parents = block.parents.concat(block)
+					if (child_block) {
+						child_block.thread_id = part.params.__THREAD_ID
+						child_block.parents = block.parents.concat(block)
+					}
 				}
 			})
 			block.text = text_parts.join("\n").toLocaleLowerCase()
